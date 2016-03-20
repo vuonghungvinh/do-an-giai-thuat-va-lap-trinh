@@ -5,12 +5,22 @@
 #include <string.h>
 #include<stdlib.h>
 #include<stdio.h>
+#include <fstream>
 using namespace std;
 struct Data_Room{
     string A[21] = {"A100", "A101", "A102", "A103", "A104", "A105", "A106", "A107", "A108", "A109", "A110", "A111", "A112", "A113", "A114", "A115", "A116", "A117", "A118", "A119", "A120"};
 	string B[21] = {"B200", "B201", "B202", "B203", "B204", "B205", "B206", "B207", "B208", "B209", "B210", "B211", "B212", "B213", "B214", "B215", "B216", "B217", "B218", "B219", "B220"};
 	string C[21] = {"C300", "C301", "C302", "C303", "C304", "C305", "C306", "C307", "C308", "C309", "C310", "C311", "C312", "C313", "C314", "C315", "C316", "C217", "C318", "C319", "C320"};
 	string D[21] = {"D400", "D401", "D402", "D403", "D404", "D405", "D406", "D407", "D408", "D409", "D410", "D411", "D412", "D413", "D414", "D415", "D416", "D417", "D418", "D419", "D420"};
+};
+struct Room {
+	string type;
+	string num;
+	int status;
+};
+struct Data {
+	Room rm;
+	struct Data *next;
 };
 struct Hotel{
 	char bill_no[9];
@@ -187,7 +197,6 @@ void Xuat (LIST &L)
         p=p->next; Stt++;
     }
 }
-
 void Search(LIST &L)
 {   
     NODE *p;    
@@ -298,15 +307,54 @@ void Listed(LIST &L,int n){
     }
     if (p==NULL && i==0)  printf("\Khong phong loai nay");    
 }
+void listroom(Data *dt){
+	Data *d;
+	d = dt;
+	while(d != NULL){
+		cout<<d->rm.type<<":"<<d->rm.num<<":"<<d->rm.status<<endl;
+		d=d->next;
+	}
+}
+Data *createData(Room room) {
+	Data *da;
+	da = new Data;
+	da->next = NULL;
+	da->rm = room;
+	return da;
+}
+//xu li file
+void ReadFile(Data* &dt) {
+	freopen("data.txt", "rb", stdin);
+   	string line;
+   	dt = NULL;
+   	Data *tmp;
+   	while(getline(cin, line))
+	{
+		Room rm;
+		rm.type = line.substr(0,1);
+		rm.num = line.substr(1,line.find(":")-1);
+		rm.status = atoi((line.substr(line.find(":")+1,line.length()-line.find(":"))).c_str());
+		if(dt == NULL){
+			dt = createData(rm);
+			tmp = dt;
+		}else {
+			tmp->next = createData(rm);
+			tmp = tmp->next;
+		}
+	}
+}
+//end xu li file
 main()
 {   
     int n;
     Hotel x;
+    Data *dt;
     while(1)
     {
     LIST L;
     L.head=L.tail=NULL;
     char chon;
+    ReadFile(dt);
     do
     {
         printf("\n\t\t\t\t  ______________________________MENU_______________________________________\t");
@@ -316,6 +364,7 @@ main()
         printf("\n\t\t\t\t | 4. Xoa tat ca cac khach hang co ten nhap vao                            |");
         printf("\n\t\t\t\t | 5. Sap xep                                                              |");
         printf("\n\t\t\t\t | 6. Liet ke theo loai phong                                              |");
+        printf("\n\t\t\t\t | 7. Liet ke danh sach phong                                              |");
         printf("\n\t\t\t\t |_________________________________________________________________________|\n\n");
         chon=getch();
         switch(chon)
@@ -339,7 +388,10 @@ main()
 			            scanf("%d",&n);
 			            Listed(L,n);
 			            printf("\nKet qua");
-			             break;}			 			   			     
+			             break;}
+			case '7': {
+				listroom(dt); break;
+			}			 			   			     
             case '0': exit(1);
             default: printf("\nNhap lai.");
         }
