@@ -7,15 +7,9 @@
 #include<stdio.h>
 #include <fstream>
 using namespace std;
-struct Data_Room{
-    string A[21] = {"A100", "A101", "A102", "A103", "A104", "A105", "A106", "A107", "A108", "A109", "A110", "A111", "A112", "A113", "A114", "A115", "A116", "A117", "A118", "A119", "A120"};
-	string B[21] = {"B200", "B201", "B202", "B203", "B204", "B205", "B206", "B207", "B208", "B209", "B210", "B211", "B212", "B213", "B214", "B215", "B216", "B217", "B218", "B219", "B220"};
-	string C[21] = {"C300", "C301", "C302", "C303", "C304", "C305", "C306", "C307", "C308", "C309", "C310", "C311", "C312", "C313", "C314", "C315", "C316", "C217", "C318", "C319", "C320"};
-	string D[21] = {"D400", "D401", "D402", "D403", "D404", "D405", "D406", "D407", "D408", "D409", "D410", "D411", "D412", "D413", "D414", "D415", "D416", "D417", "D418", "D419", "D420"};
-};
 struct Room {
-	string type;
-	string num;
+	string type;//A,B,C
+	string num;//101,102
 	int status;
 };
 struct Data {
@@ -33,7 +27,6 @@ struct Hotel{
 	int from_date;
 	int leave_date;
 	float total;	
-	Data_Room info;
 };
 struct NODE
 {
@@ -72,7 +65,7 @@ void AddFirst(LIST &L, NODE*p)
 	L.head=p;
 }
 // ham nhap
-void Nhap (LIST &L)
+void Nhap (LIST &L, Data &room)
 {
 	int i;
     Hotel x; 
@@ -107,42 +100,17 @@ void Nhap (LIST &L)
         while(i);
 	    do{
 	    	i=0;
-            printf("\nSo phong:         ");  fflush(stdin); gets(x.room_no); 
-            if(x.room_no[0]=='A'){
-            	for(int a=0; a <= sizeof(x.info.A)/sizeof(x.info.A[0])-1;a++){
-            		if(x.room_no==x.info.A[a]) break;	
-            		else if(a == sizeof(x.info.A)/sizeof(x.info.A[0])-1) {
-					printf("\nKhong hop le, moi nhap lai:"); i=1; continue; 
-					}
+			Data *tmp = room;
+            printf("\nSo phong:         ");  fflush(stdin); gets(x.room_no);       
+            	while(tmp != NULL){
+            		string str = room->rm.type + room->rm.num;
+            		string str1 = string(x.room_no);
+            		if(str1.compare(0,str.length(),str)==0) break;
+            		tmp=tmp->next;
 				}
-	 	    }
-	 	    else if(x.room_no[0]=='B'){
-            	for(int a=0; a <= sizeof(x.info.B)/sizeof(x.info.B[0])-1;a++){
-            		if(x.room_no==x.info.B[a]) break;
-            		else if(a == sizeof(x.info.B)/sizeof(x.info.B[0])-1) {
-					printf("\nKhong hop le, moi nhap lai:"); i=1; continue; 
-					}
+				if(tmp == NULL){
+					printf("\nKhong hop le, moi nhap lai:\n"); i=1; continue;
 				}
-	 	    }
-	 	    else if(x.room_no[0]=='C'){
-            	for(int a=0; a <= sizeof(x.info.C)/sizeof(x.info.C[0])-1;a++){
-            		if(x.room_no==x.info.C[a]) break;
-            		else if(a == sizeof(x.info.C)/sizeof(x.info.C[0])-1) {
-					printf("\nKhong hop le, moi nhap lai:"); i=1; continue; 
-					}
-				}
-	 	    }
-	 	    else if(x.room_no[0]=='D'){
-            	for(int a=0; a <= sizeof(x.info.D)/sizeof(x.info.D[0])-1;a++){
-            		if(x.room_no==x.info.D[a]) break;
-            		else if(a == sizeof(x.info.D)/sizeof(x.info.D[0])-1) {
-					printf("\nKhong hop le, moi nhap lai:"); i=1; continue; 
-					}
-				}
-	 	    }
-			else{
-				printf("\nKhong hop le, moi nhap lai:"); i=1; continue;
-			}
         }while(i);
 	    do{
 	    	i=0;
@@ -369,7 +337,7 @@ main()
         chon=getch();
         switch(chon)
         {   
-            case '1': { Nhap(L);             break;}
+            case '1': { Nhap(L,dt);             break;}
 			case '2': { Xuat(L);            break;}	
 			case '3': { Search(L);            break;}	
 			case '4': { Remove(L);
