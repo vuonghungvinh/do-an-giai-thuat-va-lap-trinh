@@ -83,6 +83,7 @@ void Nhap (LIST &L)
     printf("\nNhan 0 de dung nhap.\n");
     do
     {
+    	fflush(stdin);
         kiemtra=getch();
         if(kiemtra=='0')  break;
         printf("\nMa hoa don:       ");  fflush(stdin); gets(x.bill_no);  	
@@ -324,23 +325,28 @@ Data *createData(Room room) {
 }
 //xu li file
 void ReadFile(Data* &dt) {
-	freopen("data.txt", "rb", stdin);
+	ifstream myfile ("data.txt");
    	string line;
    	dt = NULL;
    	Data *tmp;
-   	while(getline(cin, line))
-	{
-		Room rm;
-		rm.type = line.substr(0,1);
-		rm.num = line.substr(1,line.find(":")-1);
-		rm.status = atoi((line.substr(line.find(":")+1,line.length()-line.find(":"))).c_str());
-		if(dt == NULL){
-			dt = createData(rm);
-			tmp = dt;
-		}else {
-			tmp->next = createData(rm);
-			tmp = tmp->next;
+   	if(myfile.is_open()) {
+   		while(getline(myfile, line))
+		{
+			Room rm;
+			rm.type = line.substr(0,1);
+			rm.num = line.substr(1,line.find(":")-1);
+			rm.status = atoi((line.substr(line.find(":")+1,line.length()-line.find(":"))).c_str());
+			if(dt == NULL){
+				dt = createData(rm);
+				tmp = dt;
+			}else {
+				tmp->next = createData(rm);
+				tmp = tmp->next;
+			}
 		}
+		myfile.close();
+	}else{
+		cout<<"file not found!!!\n";		
 	}
 }
 //end xu li file
