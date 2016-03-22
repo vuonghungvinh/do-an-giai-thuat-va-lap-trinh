@@ -108,8 +108,16 @@ void Nhap (LIST &L, Data* &room)
             	string str1 = (tmp->rm.type + tmp->rm.num);
             	string str2 = x.room_no;
             	if( (str1.compare(0,str2.length(),str2) ==0 ) ){
-            		tmp->rm.status = 0;
-            		break;
+            		if(tmp->rm.status == 0){
+            			printf("\nPhong dang ban vui long chon lai: ") ; i=1; break;
+					}
+					else if(tmp->rm.status == 2){
+						printf("\nPhong bi hu hong chon lai: ") ; i=1 ;break;
+					}
+					else{//truong hop phong hu nua?
+            	    	tmp->rm.status = 0;
+            	    	break;
+                	}
 				}
 				else
 				tmp=tmp->next;
@@ -285,8 +293,20 @@ void Listed(LIST &L,int n){
 void listroom(Data *dt){
 	Data *d;
 	d = dt;
+	string str1,str2,str3;
+	str1 = "Phong con trong";
+	str2 = "Phong da co nguoi thue";
+	str3 = "Phong bi hong dang sua chua";
 	while(d != NULL){
-		cout<<d->rm.type<<":"<<d->rm.num<<":"<<d->rm.status<<endl;
+		if(d->rm.status==1){
+		    cout<<d->rm.type<<":"<<d->rm.num<<":"<<str1<<endl; 
+     	}
+     	else if(d->rm.status==0){
+		    cout<<d->rm.type<<":"<<d->rm.num<<":"<<str2<<endl; 
+     	}
+     	else{
+     		cout<<d->rm.type<<":"<<d->rm.num<<":"<<str3<<endl; 
+		 }
 		d=d->next;
 	}
 }
