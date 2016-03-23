@@ -5,12 +5,15 @@
 #include <string.h>
 #include<stdlib.h>
 #include<stdio.h>
+#include<vector>
 #include <fstream>
 using namespace std;
 struct Room {
 	string type;
 	string num;
 	int status;
+	vector<int> from;
+	vector<int> to;
 };
 struct Data {
 	Room rm;
@@ -47,6 +50,17 @@ NODE* CreateNode (Hotel x)
     p->data=x;
     p->next=NULL;
     return p;
+}
+vector<string> split(string str, string sep){
+    char* cstr=const_cast<char*>(str.c_str());
+    char* current;
+    vector<string> arr;
+    current=strtok(cstr,sep.c_str());
+    while(current!=NULL){
+        arr.push_back(current);
+        current=strtok(NULL,sep.c_str());
+    }
+    return arr;
 }
 // them node p vao cuoi danh sach lien ket
 void AddLast (LIST &L, NODE *p)
@@ -298,15 +312,7 @@ void listroom(Data *dt){
 	str2 = "Phong da co nguoi thue";
 	str3 = "Phong bi hong dang sua chua";
 	while(d != NULL){
-		if(d->rm.status==1){
-		    cout<<d->rm.type<<":"<<d->rm.num<<":"<<str1<<endl; 
-     	}
-     	else if(d->rm.status==0){
-		    cout<<d->rm.type<<":"<<d->rm.num<<":"<<str2<<endl; 
-     	}
-     	else{
-     		cout<<d->rm.type<<":"<<d->rm.num<<":"<<str3<<endl; 
-		 }
+		cout<<d->rm.type<<":"<<d->rm.num<<":"<<(d->rm.status==1?str1:(d->rm.status==0?str2:str3))<<endl; 
 		d=d->next;
 	}
 }
@@ -326,10 +332,26 @@ void ReadFile(Data* &dt) {
    	if(myfile.is_open()) {
    		while(getline(myfile, line))
 		{
+			string str2 = "null";
 			Room rm;
+			vector<string> arr;
+			arr = split(line, ":");
+			line = arr[0].c_str();
 			rm.type = line.substr(0,1);
-			rm.num = line.substr(1,line.find(":")-1);
-			rm.status = atoi((line.substr(line.find(":")+1,line.length()-line.find(":"))).c_str());
+			rm.num = line.substr(1,line.length()-1);
+			rm.status = atoi(arr[1].c_str());
+			if(arr[2].compare("null") != 0) {
+				vector<string> fr = split(arr[2].c_str(),",");
+				for(size_t i=0;i<fr.size();i++){
+					rm.from.push_back(atoi(fr[i].c_str()));
+				}
+			}
+			if(arr[2].compare("null") != 0) {
+				vector<string> to = split(arr[3].c_str(),",");
+				for(size_t i=0;i<to.size();i++){
+					rm.to.push_back(atoi(to[i].c_str()));
+				}
+			}
 			if(dt == NULL){
 				dt = createData(rm);
 				tmp = dt;
