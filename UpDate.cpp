@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ctime>
 #include<conio.h>
 #include<math.h>
 #include <string>
@@ -78,14 +79,22 @@ void AddFirst(LIST &L, NODE*p)
 	p->next=L.head;
 	L.head=p;
 }
+//Now time
+int NowDay(){
+	time_t t = time(0);   // get time now
+    struct tm * now = localtime( & t );
+    return now->tm_mday;
+}
 // ham nhap
 void Nhap (LIST &L, Data* &room)
 {
 	int i;
     Hotel x; 
     NODE *p;
-    char *tmp;
+    char tmp[50];
     char kiemtra;   
+    vector<int> frtmp;
+    vector<int> totmp;
     printf("\nNhan phim bat ki de tiep tuc nhap.");
     printf("\nNhan 0 de dung nhap.\n");
     do
@@ -122,6 +131,8 @@ void Nhap (LIST &L, Data* &room)
             	string str1 = (tmp->rm.type + tmp->rm.num);
             	string str2 = x.room_no;
             	if( (str1.compare(0,str2.length(),str2) ==0 ) ){
+            		frtmp = tmp->rm.from;
+            		totmp = tmp->rm.to;
             		if(tmp->rm.status == 0){
             			printf("\nPhong dang ban vui long chon lai: ") ; i=1; break;
 					}
@@ -141,14 +152,16 @@ void Nhap (LIST &L, Data* &room)
 			   printf("\nKhong hop le, moi nhap lai:"); i=1; continue; 	
 			}
         }while(i);
+        nhaplai:;
 	    do{
 	    	i=0;
             printf("\nNgay den:         "); 
-            fflush(stdin);
-            gets(tmp);
-			sscanf(tmp, "%d",    &x.from_date);
-            if(x.from_date<=0 || x.from_date>31){
-        	printf("\nKhong hop le, moi nhap lai:"); i=1;
+            fflush(stdin); gets(tmp);
+			sscanf(tmp, "%d",    & x.from_date); //doi chuoi tmp thanh int
+			
+            if( x.from_date<=0 || x.from_date>31 || x.from_date < NowDay()){
+        		printf("\nKhong hop le, moi nhap lai:"); 
+				i=1;
 	 	    }
         }
         while(i);
@@ -165,6 +178,20 @@ void Nhap (LIST &L, Data* &room)
         while(i);
         printf("\n\n");
         
+        int check = 0;
+	 	if(frtmp.size()>0){
+	 		for(size_t l=0;l<totmp.size();l++){
+	 			if((frtmp[l] <= x.from_date && totmp[l] >= x.from_date) || (frtmp[l] <= x.leave_date && totmp[l] >= x.leave_date) || (frtmp[l] >= x.from_date && totmp[l] <= x.leave_date)){
+	 				check=1;
+	 				break;
+				 }
+			}
+		}
+		if(check){
+			cout<<endl<<"Thoi gian ban chon da co nguoi dat moi nhap lai: ";
+			goto nhaplai;
+		}
+			
         p=CreateNode(x);
         AddLast(L,p);
         
@@ -210,7 +237,7 @@ void Search(LIST &L)
 		else if  (strcmp(p->data.room_no,tmp)==0){          output(p->data); printf("\n"); i++; break;}
 		p=p->next;           
     }
-    if (p==NULL && i==0)  printf("\Khong co khach hang nay trong danh sach");    
+    if (p==NULL && i==0)  printf("\n Khong co khach hang nay trong danh sach");    
 }
 void DelFirst(LIST &L)
 {	NODE *tam;
