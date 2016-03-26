@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctime>
+#include  <iomanip>
 #include<conio.h>
 #include<math.h>
 #include <string>
@@ -91,92 +92,93 @@ void Nhap (LIST &L, Data* &room)
 	int i;
     Hotel x; 
     NODE *p;
+    Data *tmp1;
     char tmp[50];
     char kiemtra;   
     vector<int> frtmp;
     vector<int> totmp;
-    printf("\nNhan phim bat ki de tiep tuc nhap.");
-    printf("\nNhan 0 de dung nhap.\n");
+    cout<<endl<<"Nhan phim bat ki de tiep tuc nhap.";
+    cout<<endl<<"Nhan 0 de dung nhap."<<endl;
     do
     {
     	fflush(stdin);
         kiemtra=getch();
         if(kiemtra=='0')  break;
-        printf("\nMa hoa don:       ");  fflush(stdin); gets(x.bill_no);  	
-	    printf("\nTen khach hang:   ");  fflush(stdin); gets(x.name);
+        cout<<endl<<"Ma hoa don:       ";  fflush(stdin); gets(x.bill_no);  	
+	    cout<<endl<<"Ten khach hang:   ";  fflush(stdin); gets(x.name);
 	    do{
 	    	i=0;
-            printf("\nSo CMND:          ");  fflush(stdin); gets(x.identity_card);
+            cout<<endl<<"So CMND:          ";  fflush(stdin); gets(x.identity_card);
             for(int j=0;j<=strlen(x.identity_card)-1;j++){
             	if( (int)x.identity_card[j] < 48 ||  (int)x.identity_card[j] > 57 ){
-            		printf("\nKhong hop le, moi nhap lai:\n"); i=1; break;
+            		cout<<endl<<"Khong hop le, moi nhap lai:"<<endl; i=1; break;
 				}
 			}
         }
         while(i);
       	do{
 	    	i=0;
-            printf("\nGioi tinh:        ");  fflush(stdin); gets(x.gender);
+            cout<<endl<<"Gioi tinh:        ";  fflush(stdin); gets(x.gender);
             if(strcmpi(x.gender,"Nam")!=0 && strcmpi(x.gender,"Nu")!=0 ){
-        	printf("\nKhong hop le, moi nhap lai:"); i=1;
+        	cout<<endl<<"Khong hop le, moi nhap lai:"; i=1;
 	 	    }
         }
         while(i);
 	    do{
 	    	i=0;
-	    	Data *tmp;
-	    	tmp = room;
-            printf("\nSo phong:         ");  fflush(stdin); gets(x.room_no); 
-            while(tmp !=NULL){
-            	string str1 = (tmp->rm.type + tmp->rm.num);
+	    	tmp1 = room;
+            cout<<endl<<"So phong:         ";  fflush(stdin); gets(x.room_no); 
+            while(tmp1 !=NULL){
+            	string str1 = (tmp1->rm.type + tmp1->rm.num);
             	string str2 = x.room_no;
             	if( (str1.compare(0,str2.length(),str2) ==0 ) ){
-            		frtmp = tmp->rm.from;
-            		totmp = tmp->rm.to;
-            		if(tmp->rm.status == 0){
-            			printf("\nPhong dang ban vui long chon lai: ") ; i=1; break;
+            		frtmp = tmp1->rm.from;
+            		totmp = tmp1->rm.to;
+            		//if(tmp->rm.status == 0){
+            		if(0){
+            			cout<<endl<<"Phong dang ban vui long chon lai: " ; i=1; break;
 					}
-					else if(tmp->rm.status == 2){
-						printf("\nPhong bi hu hong chon lai: ") ; i=1 ;break;
+					else if(tmp1->rm.status == 2){
+						cout<<endl<<"Phong bi hu hong chon lai: " ; i=1 ;break;
 					}
 					else{//truong hop phong hu nua?
-            	    	tmp->rm.status = 0;
+            	    	tmp1->rm.status = 0;
             	    	break;
                 	}
 				}
 				else
-				tmp=tmp->next;
+					tmp1=tmp1->next;
 			}
-			if(tmp == NULL){
+			if(tmp1 == NULL){
 				
-			   printf("\nKhong hop le, moi nhap lai:"); i=1; continue; 	
+			   cout<<endl<<"Khong hop le, moi nhap lai:"; i=1; continue; 	
 			}
         }while(i);
         nhaplai:;
 	    do{
 	    	i=0;
-            printf("\nNgay den:         "); 
+            cout<<endl<<"Ngay den:         "; 
             fflush(stdin); gets(tmp);
 			sscanf(tmp, "%d",    & x.from_date); //doi chuoi tmp thanh int
 			
             if( x.from_date<=0 || x.from_date>31 || x.from_date < NowDay()){
-        		printf("\nKhong hop le, moi nhap lai:"); 
+        		cout<<endl<<"Khong hop le, moi nhap lai:"; 
 				i=1;
 	 	    }
         }
         while(i);
         do{
 	    	i=0;
-            printf("\nNgay di:          ");
+            cout<<endl<<"Ngay di:          ";
             fflush(stdin);
 			gets(tmp);
 			sscanf(tmp, "%d",    &x.leave_date);
             if(x.leave_date<=0 || x.leave_date>31 || x.leave_date < x.from_date){
-        	printf("\nKhong hop le, moi nhap lai:"); i=1;
+        	cout<<endl<<"Khong hop le, moi nhap lai:"; i=1;
 		    }
         }
         while(i);
-        printf("\n\n");
+        cout<<endl<<endl;
         
         int check = 0;
 	 	if(frtmp.size()>0){
@@ -191,7 +193,8 @@ void Nhap (LIST &L, Data* &room)
 			cout<<endl<<"Thoi gian ban chon da co nguoi dat moi nhap lai: ";
 			goto nhaplai;
 		}
-			
+		tmp1->rm.from.push_back(x.from_date);
+		tmp1->rm.to.push_back(x.leave_date);	
         p=CreateNode(x);
         AddLast(L,p);
         
@@ -206,20 +209,23 @@ void Nhap (LIST &L, Data* &room)
 }
 // ham xuat du lieu
 void output(Hotel &x){
-	printf("Bill No:%9s  Name:%18s   Identity Card:%13s  Gender:%6s   Room No:%5s   Room Type:%1c   Unit Price:%6.0f (VND)   From Date:%2d   Leave Date:%2d   Total:%10.0f (VND)", x.bill_no, x.name, x.identity_card, x.gender, x.room_no, x.room_type, x.unit_price, x.from_date, x.leave_date, x.total);	
+	cout<<"|"<<setw(10)<<x.bill_no<<setw(20)<<x.name<<setw(20)<<x.identity_card<<setw(10)<<x.gender<<setw(10)<<x.room_no<<setw(10)<<x.room_type<<setw(10)<<x.unit_price<<"VND"<<setw(10)<<x.from_date<<setw(10)<<x.leave_date<<setw(10)<<x.total<<"VND   |";	
 }
 void Xuat (LIST &L)
 {
-	int Stt=1;
+	//int Stt=1;
     NODE *p;
     p=L.head;
-    printf("\nDanh sach khach hang \n"); 
+    cout<<endl<<"Danh sach khach hang "<<endl; 
+    cout<<"___________________________________________________________________________________________________________________________________________";
+    cout<<endl<<endl<<"|"<<setw(10)<<"BILL NO"<<setw(20)<<"NAME"<<setw(20)<<"IDENTITY CARD"<<setw(10)<<"GENDER"<<setw(10)<<"ROOM NO"<<setw(10)<<"ROOM TYPE"<<setw(10)<<"UNIT PRICE"<<setw(10)<<"FROM DATE"<<setw(10)<<"LEAVE DATE"<<setw(10)<<"TOTAL    |";
+    cout<<endl<<"___________________________________________________________________________________________________________________________________________"<<endl<<endl;
     while(p!=NULL)
     {
-    	printf("STT:%3d  ",Stt); output(p->data);  printf("\n"); 
-        //printf("\nSTT:%d  Bill No:%9s  Name:%18s   Identity Card:%13s  Gender:%6s   Room No:%5s   Room Type:%1c   Unit Price:%6.0f (VND)   From Date:%2d   Leave Date:%2d   Total:%10.0f (VND)",Stt , p->bill_no, p->name, p->identity_card, p->gender, p->room_no, p->room_type, p->unit_price, p->from_date, p->leave_date, p->total);
-        p=p->next; Stt++;
+    	cout<<"   "; output(p->data);  cout<<endl; 
+        p=p->next;
     }
+    cout<<endl<<"____________________________________________________________________________________________________________________________________________"<<endl<<endl;
 }
 void Search(LIST &L)
 {   
@@ -227,17 +233,17 @@ void Search(LIST &L)
     char tmp[19]; 
 	int i=0;; 
     p=L.head;
-    printf("\nNhap thong tin khach hang can tim: ");  fflush(stdin); gets(tmp);
-    printf("\nKet qua tim kiem ");
+    cout<<endl<<"Nhap thong tin khach hang can tim: ";  fflush(stdin); gets(tmp);
+    cout<<endl<<"Ket qua tim kiem ";
     while(p!=NULL)
     {           
-        if       (strcmp(p->data.name,tmp)==0){             output(p->data); printf("\n"); i++; }  // ham strcmp dung de so sanh hai sau string xem giong nhau khong, neu giong tra ve 0
-        else if  (strcmp(p->data.bill_no,tmp)==0){          output(p->data); printf("\n"); i++; break ;}
-		else if  (strcmp(p->data.identity_card,tmp)==0){    output(p->data); printf("\n"); i++; break;}
-		else if  (strcmp(p->data.room_no,tmp)==0){          output(p->data); printf("\n"); i++; break;}
+        if       (strcmp(p->data.name,tmp)==0){             output(p->data); cout<<endl; i++; }  // ham strcmp dung de so sanh hai sau string xem giong nhau khong, neu giong tra ve 0
+        else if  (strcmp(p->data.bill_no,tmp)==0){          output(p->data); cout<<endl; i++; break ;}
+		else if  (strcmp(p->data.identity_card,tmp)==0){    output(p->data); cout<<endl; i++; break;}
+		else if  (strcmp(p->data.room_no,tmp)==0){          output(p->data); cout<<endl; i++; break;}
 		p=p->next;           
     }
-    if (p==NULL && i==0)  printf("\n Khong co khach hang nay trong danh sach");    
+    if (p==NULL && i==0)  cout<<endl<<" Khong co khach hang nay trong danh sach";    
 }
 void DelFirst(LIST &L)
 {	NODE *tam;
@@ -266,7 +272,7 @@ void Remove(LIST &L)
     int pos=1,i=0;NODE *p;    
     char t[19];  
     p=L.head;
-    printf("\nNhap ten sinh vien can xoa: ");  fflush(stdin); gets(t);
+    cout<<endl<<"Nhap ten sinh vien can xoa: ";  fflush(stdin); gets(t);
     while(p!=NULL)
     {         
         if(strcmp(p->data.name,t)==0){ 
@@ -278,7 +284,7 @@ void Remove(LIST &L)
        pos++;
        p=p->next;
     }
-    if (i==0) printf("\nKhong co sinh vien ten %s de xoa",t);
+    if (i==0) cout<<endl<<"Khong co sinh vien ten %s de xoa"<<t;
 }
 void ListQSort(LIST &L,int n){
 	NODE *p,*X;
@@ -321,15 +327,15 @@ void Listed(LIST &L,int n){
     p=L.head;
     while(p!=NULL)
     {           
-          if(n==1 && p->data.room_no[0]=='A'){ output(p->data); printf("\n"); i++;
+          if(n==1 && p->data.room_no[0]=='A')     { output(p->data);  cout<<endl; i++;
 		  }
-		  else if(n==2 && p->data.room_no[0]=='B'){ output(p->data); printf("\n"); i++;
+		  else if(n==2 && p->data.room_no[0]=='B'){ output(p->data);  cout<<endl; i++;
 		  }
-		  else if(n==3 && p->data.room_no[0]!='A' && p->data.room_no[0]!='B'){ output(p->data); printf("\n"); i++;
+		  else if(n==3 && p->data.room_no[0]!='A' && p->data.room_no[0]!='B'){ output(p->data); cout<<endl; i++;
 		  }	    
 		  p=p->next; 
     }
-    if (p==NULL && i==0)  printf("\Khong phong loai nay");    
+    if (p==NULL && i==0)  cout<<endl<<"Khong phong loai nay";    
 }
 void listroom(Data *dt){
 	Data *d;
@@ -406,15 +412,17 @@ main()
     ReadFile(dt);
     do
     {
-        printf("\n\t\t\t\t  ______________________________MENU_______________________________________\t");
-		printf("\n\t\t\t\t | 1. Nhap danh sach                                                       |");
-        printf("\n\t\t\t\t | 2. In ra thong tin                                                      |");
-        printf("\n\t\t\t\t | 3. Tim kiem(ten, CMND, mahoa don, so phong)                             |");
-        printf("\n\t\t\t\t | 4. Xoa tat ca cac khach hang co ten nhap vao                            |");
-        printf("\n\t\t\t\t | 5. Sap xep                                                              |");
-        printf("\n\t\t\t\t | 6. Liet ke theo loai phong                                              |");
-        printf("\n\t\t\t\t | 7. Liet ke danh sach phong                                              |");
-        printf("\n\t\t\t\t |_________________________________________________________________________|\n\n");
+        cout<<endl<<setw(40)<<" "<<"************************************MENU***********************************";
+		cout<<endl<<setw(40)<<" "<<"*                                                                         *";
+		cout<<endl<<setw(40)<<" "<<"*         1. Nhap danh sach                                               *";
+        cout<<endl<<setw(40)<<" "<<"*         2. In ra thong tin                                              *";
+        cout<<endl<<setw(40)<<" "<<"*         3. Tim kiem(ten, CMND, mahoa don, so phong)                     *";
+        cout<<endl<<setw(40)<<" "<<"*         4. Xoa tat ca cac khach hang co ten nhap vao                    *";
+        cout<<endl<<setw(40)<<" "<<"*         5. Sap xep                                                      *";
+        cout<<endl<<setw(40)<<" "<<"*         6. Liet ke theo loai phong                                      *";
+        cout<<endl<<setw(40)<<" "<<"*         7. Liet ke danh sach phong                                      *";
+        cout<<endl<<setw(40)<<" "<<"*                                                                         *";
+        cout<<endl<<setw(40)<<" "<<"***************************************************************************"<<endl<<endl;
         chon=getch();
         switch(chon)
         {   
@@ -422,27 +430,27 @@ main()
 			case '2': { Xuat(L);            break;}	
 			case '3': { Search(L);            break;}	
 			case '4': { Remove(L);
-			            printf("\nKet qua sau khi xoa:");
+			            cout<<endl<<"Ket qua sau khi xoa:";
 			            Xuat(L);
 			            break;}
 			case '5': { int n;
-			            printf("\nMoi ban nhap \n1 de sap xep theo giam dan tong tien \n2 de giam dan so ngay o \n3 giam dan theo gia phong:\n");
-			            scanf("%d",&n);
+			            cout<<endl<<"Moi ban nhap: "<<endl<<"* 1 De sap xep theo giam dan tong tien "<<endl<<"* 2 De giam dan so ngay o "<<endl<<"* 3 Giam dan theo gia phong"<<endl;
+			            cin>>n;
 			            ListQSort(L,n);
-			            printf("\nKet qua sau khi xoa:");
+			            cout<<endl<<"Ket qua sau khi xoa:";
 			            Xuat(L);
 			             break;}
 			case '6': { int n;
-			            printf("\nMoi ban nhap \n1 liet ke tat ca phong loai A \n2 tat ca phong loai B \n3 tat ca con lai\n");
-			            scanf("%d",&n);
+			            cout<<endl<<"Moi ban nhap "<<endl<<"* Liet ke tat ca phong loai A "<<endl<<"* Tat ca phong loai B "<<endl<<"* Tat ca con lai\n";
+			            cin>>n;;
 			            Listed(L,n);
-			            printf("\nKet qua");
+			            cout<<endl<<"\nKet qua";
 			             break;}
 			case '7': {
 				listroom(dt); break;
 			}			 			   			     
             case '0': exit(1);
-            default: printf("\nNhap lai.");
+            default: cout<<endl<<"Nhap lai.";
         }
     } while (chon!='0');
      
