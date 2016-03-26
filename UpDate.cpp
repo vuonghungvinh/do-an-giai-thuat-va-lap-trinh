@@ -1,13 +1,13 @@
 #include <iostream>
 #include <ctime>
-#include  <iomanip>
-#include<conio.h>
-#include<math.h>
+#include <iomanip>
+#include <conio.h>
+#include <math.h>
 #include <string>
 #include <string.h>
-#include<stdlib.h>
-#include<stdio.h>
-#include<vector>
+#include <stdlib.h>
+#include <stdio.h>
+#include <vector>
 #include <fstream>
 using namespace std;
 struct Room {
@@ -209,7 +209,7 @@ void Nhap (LIST &L, Data* &room)
 }
 // ham xuat du lieu
 void output(Hotel &x){
-	cout<<"|"<<setw(10)<<x.bill_no<<setw(20)<<x.name<<setw(20)<<x.identity_card<<setw(10)<<x.gender<<setw(10)<<x.room_no<<setw(10)<<x.room_type<<setw(10)<<x.unit_price<<"VND"<<setw(10)<<x.from_date<<setw(10)<<x.leave_date<<setw(10)<<x.total<<"VND   |";	
+	cout<<"|"<<setw(20)<<x.bill_no<<setw(20)<<x.name<<setw(15)<<x.identity_card<<setw(15)<<x.gender<<setw(15)<<x.room_no<<setw(15)<<x.room_type<<setw(15)<<x.unit_price<<"VND"<<setw(15)<<x.from_date<<setw(15)<<x.leave_date<<setw(15)<<x.total<<"VND |";	
 }
 void Xuat (LIST &L)
 {
@@ -217,15 +217,18 @@ void Xuat (LIST &L)
     NODE *p;
     p=L.head;
     cout<<endl<<"Danh sach khach hang "<<endl; 
-    cout<<"___________________________________________________________________________________________________________________________________________";
-    cout<<endl<<endl<<"|"<<setw(10)<<"BILL NO"<<setw(20)<<"NAME"<<setw(20)<<"IDENTITY CARD"<<setw(10)<<"GENDER"<<setw(10)<<"ROOM NO"<<setw(10)<<"ROOM TYPE"<<setw(10)<<"UNIT PRICE"<<setw(10)<<"FROM DATE"<<setw(10)<<"LEAVE DATE"<<setw(10)<<"TOTAL    |";
-    cout<<endl<<"___________________________________________________________________________________________________________________________________________"<<endl<<endl;
+    cout<<" _______________________________________________________________________________________________________________________________________________________________________"<<endl;
+    cout<<"|                                                                                                                                                                       |"<<endl;
+    cout<<"|"<<setw(20)<<"Ma so"<<setw(20)<<"Ten"<<setw(15)<<"CMND"<<setw(15)<<"Gioi tinh"<<setw(15)<<"So phong"<<setw(15)<<"Loai phong"<<setw(18)<<"Don gia"<<setw(15)<<"Ngay den"<<setw(15)<<"Ngay di"<<setw(18)<<"Tong tien"<<" |"<<endl;
+    cout<<"|_______________________________________________________________________________________________________________________________________________________________________|"<<endl;
+    cout<<"|                                                                                                                                                                       |"<<endl;
     while(p!=NULL)
     {
-    	cout<<"   "; output(p->data);  cout<<endl; 
+    	output(p->data);  cout<<endl; 
         p=p->next;
     }
-    cout<<endl<<"____________________________________________________________________________________________________________________________________________"<<endl<<endl;
+    cout<<"|                                                                                                                                                                       |"<<endl;
+    cout<<"|_______________________________________________________________________________________________________________________________________________________________________|"<<endl<<endl;
 }
 void Search(LIST &L)
 {   
