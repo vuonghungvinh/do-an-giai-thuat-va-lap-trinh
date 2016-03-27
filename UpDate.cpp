@@ -1,13 +1,13 @@
 #include <iostream>
 #include <ctime>
-#include  <iomanip>
-#include<conio.h>
-#include<math.h>
+#include <iomanip>
+#include <conio.h>
+#include <math.h>
 #include <string>
 #include <string.h>
-#include<stdlib.h>
-#include<stdio.h>
-#include<vector>
+#include <stdlib.h>
+#include <stdio.h>
+#include <vector>
 #include <fstream>
 using namespace std;
 struct Room {
@@ -22,9 +22,9 @@ struct Data {
 	struct Data *next;
 };
 struct Hotel{
-	char bill_no[9];
+	char bill_no[18];
 	char name[19];
-	char identity_card[13];
+	char identity_card[15];
 	char gender[6];
 	char room_no[5];
 	char room_type;
@@ -53,6 +53,76 @@ NODE* CreateNode (Hotel x)
     p->next=NULL;
     return p;
 }
+
+void writefile(string file, vector<string> data){
+	ofstream myfile;
+	myfile.open (file.c_str());
+	for(size_t i=0;i<data.size();i++){
+		data[i]+="\n";
+		myfile << data[i].c_str();
+	}
+	myfile.close();
+}
+
+void saveData(Data *dt) {
+	Data *d;
+	d = dt;
+	vector<string> data;
+	while(d != NULL){
+		string tmp = d->rm.type + d->rm.num + ":";
+		char c[100];
+		tmp+=string(itoa(d->rm.status,c,10)) +":";
+		string tmpfr="";
+		string tmpto="";
+		for(size_t i=0;i<d->rm.from.size();i++){
+			tmpfr+= string(itoa(d->rm.from[i],c,10))+",";
+		}
+		if(d->rm.from.size()<1)
+			tmpfr = "null";
+		for(size_t i=0;i<d->rm.to.size();i++){
+			tmpto+= string(itoa(d->rm.to[i],c,10))+",";
+		}
+		if(d->rm.to.size()<1)
+			tmpto = "null";
+		tmp += tmpfr.substr(0, tmpfr.length()-1)+":";
+		tmp += tmpto.substr(0, tmpto.length()-1);
+		data.push_back(tmp);
+		d=d->next;
+	}
+	if(data.size()>0){
+		writefile("data.txt", data);
+	}
+}
+
+void saveCustomer(LIST &L) {
+	NODE *list;
+	list = L.head;
+	vector<string> data;
+	while(list != NULL){
+		char* str = new char[100];
+		char c[3];
+		string tmp = "";
+		tmp = string(list->data.bill_no) + ":";
+		tmp += string(list->data.name) + ":";
+		tmp += string(list->data.identity_card) + ":";
+		tmp += string(list->data.gender) + ":";
+		tmp += string(list->data.room_no) + ":";
+		tmp += string(1,list->data.room_type) + ":";
+		str[0] = ' ';
+		sprintf(str, "%.4g", list->data.unit_price );
+		tmp += string(str) + ":";
+		tmp += string(itoa(list->data.from_date, c, 10)) + ":";
+		tmp += string(itoa(list->data.leave_date, c, 10)) + ":";
+		sprintf(str, "%.4g", list->data.total);
+		tmp += string(str);
+		data.push_back(tmp);
+		list=list->next;
+	}
+	if(data.size()>0){
+		writefile("customer.txt", data);
+	}
+}
+
 vector<string> split(string str, string sep){
     char* cstr=const_cast<char*>(str.c_str());
     char* current;
@@ -197,19 +267,20 @@ void Nhap (LIST &L, Data* &room)
 		tmp1->rm.to.push_back(x.leave_date);	
         p=CreateNode(x);
         AddLast(L,p);
-        
+        saveData(room);
         //Xu ly du lieu
         p->data.room_type = p->data.room_no[0];
     	if        (p->data.room_type=='A') p->data.unit_price=400;
     	else if   (p->data.room_type=='B') p->data.unit_price=300;
     	else       p->data.unit_price=250;
     	p->data.total = p->data.unit_price * (p->data.leave_date - p->data.from_date + 1);
+    	saveCustomer(L);
     } 
 	while (1);
 }
 // ham xuat du lieu
 void output(Hotel &x){
-	cout<<"|"<<setw(10)<<x.bill_no<<setw(20)<<x.name<<setw(20)<<x.identity_card<<setw(10)<<x.gender<<setw(10)<<x.room_no<<setw(10)<<x.room_type<<setw(10)<<x.unit_price<<"VND"<<setw(10)<<x.from_date<<setw(10)<<x.leave_date<<setw(10)<<x.total<<"VND   |";	
+	cout<<"  |"<<setw(12)<<x.bill_no<<" |"<<setw(24)<<x.name<<" |"<<setw(13)<<x.identity_card<<" |"<<setw(13)<<x.gender<<" |"<<setw(13)<<x.room_no<<" |"<<setw(13)<<x.room_type<<" |"<<setw(13)<<x.unit_price<<"VND"<<" |"<<setw(13)<<x.from_date<<" |"<<setw(13)<<x.leave_date<<" |"<<setw(13)<<x.total<<"VND |";	
 }
 void Xuat (LIST &L)
 {
@@ -217,15 +288,18 @@ void Xuat (LIST &L)
     NODE *p;
     p=L.head;
     cout<<endl<<"Danh sach khach hang "<<endl; 
-    cout<<"___________________________________________________________________________________________________________________________________________";
-    cout<<endl<<endl<<"|"<<setw(10)<<"BILL NO"<<setw(20)<<"NAME"<<setw(20)<<"IDENTITY CARD"<<setw(10)<<"GENDER"<<setw(10)<<"ROOM NO"<<setw(10)<<"ROOM TYPE"<<setw(10)<<"UNIT PRICE"<<setw(10)<<"FROM DATE"<<setw(10)<<"LEAVE DATE"<<setw(10)<<"TOTAL    |";
-    cout<<endl<<"___________________________________________________________________________________________________________________________________________"<<endl<<endl;
+    cout<<"   _____________________________________________________________________________________________________________________________________________________________________"<<endl;
+    cout<<"  |             |                         |              |              |              |              |                 |              |              |                 |"<<endl;
+    cout<<"  |"<<setw(12)<<"Ma so"<<" |"<<setw(24)<<"Ten"<<" |"<<setw(13)<<"CMND"<<" |"<<setw(13)<<"Gioi tinh"<<" |"<<setw(13)<<"So phong"<<" |"<<setw(13)<<"Loai phong"<<" |"<<setw(16)<<"Don gia"<<" |"<<setw(13)<<"Ngay den"<<" |"<<setw(13)<<"Ngay di"<<" |"<<setw(16)<<"Tong tien"<<" |"<<endl;
+    cout<<"  |_____________|_________________________|______________|______________|______________|______________|_________________|______________|______________|_________________|"<<endl;
+    cout<<"  |             |                         |              |              |              |              |                 |              |              |                 |"<<endl;
     while(p!=NULL)
     {
-    	cout<<"   "; output(p->data);  cout<<endl; 
+    	output(p->data);  cout<<endl; 
         p=p->next;
     }
-    cout<<endl<<"____________________________________________________________________________________________________________________________________________"<<endl<<endl;
+    cout<<"  |             |                         |              |              |              |              |                 |              |              |                 |"<<endl;
+    cout<<"  |_____________|_________________________|______________|______________|______________|______________|_________________|______________|______________|_________________|"<<endl<<endl;
 }
 void Search(LIST &L)
 {   
@@ -234,7 +308,12 @@ void Search(LIST &L)
 	int i=0;; 
     p=L.head;
     cout<<endl<<"Nhap thong tin khach hang can tim: ";  fflush(stdin); gets(tmp);
-    cout<<endl<<"Ket qua tim kiem ";
+    cout<<endl<<"Ket qua tim kiem "<<endl;
+    cout<<"   _____________________________________________________________________________________________________________________________________________________________________"<<endl;
+    cout<<"  |             |                         |              |              |              |              |                 |              |              |                 |"<<endl;
+    cout<<"  |"<<setw(12)<<"Ma so"<<" |"<<setw(24)<<"Ten"<<" |"<<setw(13)<<"CMND"<<" |"<<setw(13)<<"Gioi tinh"<<" |"<<setw(13)<<"So phong"<<" |"<<setw(13)<<"Loai phong"<<" |"<<setw(16)<<"Don gia"<<" |"<<setw(13)<<"Ngay den"<<" |"<<setw(13)<<"Ngay di"<<" |"<<setw(16)<<"Tong tien"<<" |"<<endl;
+    cout<<"  |_____________|_________________________|______________|______________|______________|______________|_________________|______________|______________|_________________|"<<endl;
+    cout<<"  |             |                         |              |              |              |              |                 |              |              |                 |"<<endl;
     while(p!=NULL)
     {           
         if       (strcmp(p->data.name,tmp)==0){             output(p->data); cout<<endl; i++; }  // ham strcmp dung de so sanh hai sau string xem giong nhau khong, neu giong tra ve 0
@@ -243,6 +322,8 @@ void Search(LIST &L)
 		else if  (strcmp(p->data.room_no,tmp)==0){          output(p->data); cout<<endl; i++; break;}
 		p=p->next;           
     }
+    cout<<"  |             |                         |              |              |              |              |                 |              |              |                 |"<<endl;
+    cout<<"  |_____________|_________________________|______________|______________|______________|______________|_________________|______________|______________|_________________|"<<endl<<endl;
     if (p==NULL && i==0)  cout<<endl<<" Khong co khach hang nay trong danh sach";    
 }
 void DelFirst(LIST &L)
@@ -325,16 +406,23 @@ void Listed(LIST &L,int n){
 	NODE *p;    
 	int i=0;; 
     p=L.head;
+    cout<<"   _____________________________________________________________________________________________________________________________________________________________________"<<endl;
+    cout<<"  |             |                         |              |              |              |              |                 |              |              |                 |"<<endl;
+    cout<<"  |"<<setw(12)<<"Ma so"<<" |"<<setw(24)<<"Ten"<<" |"<<setw(13)<<"CMND"<<" |"<<setw(13)<<"Gioi tinh"<<" |"<<setw(13)<<"So phong"<<" |"<<setw(13)<<"Loai phong"<<" |"<<setw(16)<<"Don gia"<<" |"<<setw(13)<<"Ngay den"<<" |"<<setw(13)<<"Ngay di"<<" |"<<setw(16)<<"Tong tien"<<" |"<<endl;
+    cout<<"  |_____________|_________________________|______________|______________|______________|______________|_________________|______________|______________|_________________|"<<endl;
+    cout<<"  |             |                         |              |              |              |              |                 |              |              |                 |"<<endl;
     while(p!=NULL)
     {           
-          if(n==1 && p->data.room_no[0]=='A')     { output(p->data);  cout<<endl; i++;
+          if(n==1 && p->data.room_type=='A')     { output(p->data);  cout<<endl; i++;
 		  }
-		  else if(n==2 && p->data.room_no[0]=='B'){ output(p->data);  cout<<endl; i++;
+		  else if(n==2 && p->data.room_type=='B') { output(p->data);  cout<<endl; i++;
 		  }
-		  else if(n==3 && p->data.room_no[0]!='A' && p->data.room_no[0]!='B'){ output(p->data); cout<<endl; i++;
+		  else if(n==3 && p->data.room_type!= 'A' && p->data.room_type!= 'B') { output(p->data); cout<<endl; i++;
 		  }	    
 		  p=p->next; 
     }
+    cout<<"  |             |                         |              |              |              |              |                 |              |              |                 |"<<endl;
+    cout<<"  |_____________|_________________________|______________|______________|______________|______________|_________________|______________|______________|_________________|"<<endl<<endl;
     if (p==NULL && i==0)  cout<<endl<<"Khong phong loai nay";    
 }
 void listroom(Data *dt){
@@ -399,6 +487,47 @@ void ReadFile(Data* &dt) {
 	}
 }
 //end xu li file
+
+//doc list customer
+void readcustome(LIST &L) {
+	ifstream myfile ("customer.txt");
+   	string line;
+   	Hotel x; 
+    NODE *p;
+   	if(myfile.is_open()) {
+   		while(getline(myfile, line))
+		{
+			vector<string> arr;
+			arr = split(line, ":");
+			strncpy(x.bill_no, arr[0].c_str(), sizeof(x.bill_no));
+			strncpy(x.name, arr[1].c_str(), sizeof(x.name));
+			strncpy(x.identity_card, arr[2].c_str(), sizeof(x.identity_card));
+			strncpy(x.gender, arr[3].c_str(), sizeof(x.gender));
+			strncpy(x.room_no, arr[4].c_str(), sizeof(x.room_no));
+			x.room_type = arr[5].c_str()[0];
+			//x.unit_price = stof(arr[6].c_str());
+			sscanf(arr[6].c_str(), "%f", &x.unit_price); 
+			sscanf(arr[7].c_str(), "%d", &x.from_date);
+			sscanf(arr[8].c_str(), "%d", &x.leave_date);
+			sscanf(arr[9].c_str(), "%f", &x.total);
+			
+			//strncpy(x.unit_price, arr[5].c_str(), sizeof(x.room_type));
+			//strncpy(x.room_type, arr[5].c_str(), sizeof(x.room_type));
+			//Xu ly du lieu
+			p = CreateNode(x);
+        	AddLast(L,p);
+	    	if        (p->data.room_type=='A') p->data.unit_price=400;
+	    	else if   (p->data.room_type=='B') p->data.unit_price=300;
+	    	else       p->data.unit_price=250;
+	    	p->data.total = p->data.unit_price * (p->data.leave_date - p->data.from_date + 1);
+		}
+		myfile.close();
+	}else{
+		cout<<"file not found!!!\n";		
+	}
+	
+}
+
 main()
 {   
     int n;
@@ -410,6 +539,8 @@ main()
     L.head=L.tail=NULL;
     char chon;
     ReadFile(dt);
+    saveData(dt);
+    readcustome(L);
     do
     {
         cout<<endl<<setw(40)<<" "<<"************************************MENU***********************************";
@@ -434,14 +565,14 @@ main()
 			            Xuat(L);
 			            break;}
 			case '5': { int n;
-			            cout<<endl<<"Moi ban nhap: "<<endl<<"* 1 De sap xep theo giam dan tong tien "<<endl<<"* 2 De giam dan so ngay o "<<endl<<"* 3 Giam dan theo gia phong"<<endl;
+			            cout<<endl<<"Moi ban nhap: "<<endl<<"* 1.De sap xep theo giam dan tong tien "<<endl<<"* 2.De giam dan so ngay o "<<endl<<"* 3.Giam dan theo gia phong"<<endl;
 			            cin>>n;
 			            ListQSort(L,n);
 			            cout<<endl<<"Ket qua sau khi xoa:";
 			            Xuat(L);
 			             break;}
 			case '6': { int n;
-			            cout<<endl<<"Moi ban nhap "<<endl<<"* Liet ke tat ca phong loai A "<<endl<<"* Tat ca phong loai B "<<endl<<"* Tat ca con lai\n";
+			            cout<<endl<<"Moi ban nhap "<<endl<<"* 1.Liet ke tat ca phong loai A "<<endl<<"* 2.Tat ca phong loai B "<<endl<<"* 3.Tat ca con lai\n";
 			            cin>>n;;
 			            Listed(L,n);
 			            cout<<endl<<"\nKet qua";
