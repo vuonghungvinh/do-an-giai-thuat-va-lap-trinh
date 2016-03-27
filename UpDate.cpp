@@ -22,9 +22,9 @@ struct Data {
 	struct Data *next;
 };
 struct Hotel{
-	char bill_no[9];
+	char bill_no[18];
 	char name[19];
-	char identity_card[13];
+	char identity_card[15];
 	char gender[6];
 	char room_no[5];
 	char room_type;
@@ -209,7 +209,7 @@ void Nhap (LIST &L, Data* &room)
 }
 // ham xuat du lieu
 void output(Hotel &x){
-	cout<<"|"<<setw(20)<<x.bill_no<<setw(20)<<x.name<<setw(15)<<x.identity_card<<setw(15)<<x.gender<<setw(15)<<x.room_no<<setw(15)<<x.room_type<<setw(15)<<x.unit_price<<"VND"<<setw(15)<<x.from_date<<setw(15)<<x.leave_date<<setw(15)<<x.total<<"VND |";	
+	cout<<"|"<<setw(18)<<x.bill_no<<" |"<<setw(18)<<x.name<<" |"<<setw(13)<<x.identity_card<<" |"<<setw(13)<<x.gender<<" |"<<setw(13)<<x.room_no<<" |"<<setw(13)<<x.room_type<<" |"<<setw(13)<<x.unit_price<<"VND"<<" |"<<setw(13)<<x.from_date<<" |"<<setw(13)<<x.leave_date<<" |"<<setw(13)<<x.total<<"VND |";	
 }
 void Xuat (LIST &L)
 {
@@ -217,18 +217,18 @@ void Xuat (LIST &L)
     NODE *p;
     p=L.head;
     cout<<endl<<"Danh sach khach hang "<<endl; 
-    cout<<" _______________________________________________________________________________________________________________________________________________________________________"<<endl;
-    cout<<"|                                                                                                                                                                       |"<<endl;
-    cout<<"|"<<setw(20)<<"Ma so"<<setw(20)<<"Ten"<<setw(15)<<"CMND"<<setw(15)<<"Gioi tinh"<<setw(15)<<"So phong"<<setw(15)<<"Loai phong"<<setw(18)<<"Don gia"<<setw(15)<<"Ngay den"<<setw(15)<<"Ngay di"<<setw(18)<<"Tong tien"<<" |"<<endl;
-    cout<<"|_______________________________________________________________________________________________________________________________________________________________________|"<<endl;
-    cout<<"|                                                                                                                                                                       |"<<endl;
+    cout<<" _____________________________________________________________________________________________________________________________________________________________________"<<endl;
+    cout<<"|                   |                   |              |              |              |              |                 |              |              |                 |"<<endl;
+    cout<<"|"<<setw(18)<<"Ma so"<<" |"<<setw(18)<<"Ten"<<" |"<<setw(13)<<"CMND"<<" |"<<setw(13)<<"Gioi tinh"<<" |"<<setw(13)<<"So phong"<<" |"<<setw(13)<<"Loai phong"<<" |"<<setw(16)<<"Don gia"<<" |"<<setw(13)<<"Ngay den"<<" |"<<setw(13)<<"Ngay di"<<" |"<<setw(16)<<"Tong tien"<<" |"<<endl;
+    cout<<"|___________________|___________________|______________|______________|______________|______________|_________________|______________|______________|_________________|"<<endl;
+    cout<<"|                   |                   |              |              |              |              |                 |              |              |                 |"<<endl;
     while(p!=NULL)
     {
     	output(p->data);  cout<<endl; 
         p=p->next;
     }
-    cout<<"|                                                                                                                                                                       |"<<endl;
-    cout<<"|_______________________________________________________________________________________________________________________________________________________________________|"<<endl<<endl;
+    cout<<"|                   |                   |              |              |              |              |                 |              |              |                 |"<<endl;
+    cout<<"|___________________|___________________|______________|______________|______________|______________|_________________|______________|______________|_________________|"<<endl<<endl;
 }
 void Search(LIST &L)
 {   
@@ -237,7 +237,7 @@ void Search(LIST &L)
 	int i=0;; 
     p=L.head;
     cout<<endl<<"Nhap thong tin khach hang can tim: ";  fflush(stdin); gets(tmp);
-    cout<<endl<<"Ket qua tim kiem ";
+    cout<<endl<<"Ket qua tim kiem "<<endl;
     while(p!=NULL)
     {           
         if       (strcmp(p->data.name,tmp)==0){             output(p->data); cout<<endl; i++; }  // ham strcmp dung de so sanh hai sau string xem giong nhau khong, neu giong tra ve 0
