@@ -543,17 +543,17 @@ main()
     readcustome(L);
     do
     {
-        cout<<endl<<setw(40)<<" "<<"************************************MENU***********************************";
-		cout<<endl<<setw(40)<<" "<<"*                                                                         *";
-		cout<<endl<<setw(40)<<" "<<"*         1. Nhap danh sach                                               *";
-        cout<<endl<<setw(40)<<" "<<"*         2. In ra thong tin                                              *";
-        cout<<endl<<setw(40)<<" "<<"*         3. Tim kiem(ten, CMND, mahoa don, so phong)                     *";
-        cout<<endl<<setw(40)<<" "<<"*         4. Xoa tat ca cac khach hang co ten nhap vao                    *";
-        cout<<endl<<setw(40)<<" "<<"*         5. Sap xep                                                      *";
-        cout<<endl<<setw(40)<<" "<<"*         6. Liet ke theo loai phong                                      *";
-        cout<<endl<<setw(40)<<" "<<"*         7. Liet ke danh sach phong                                      *";
-        cout<<endl<<setw(40)<<" "<<"*                                                                         *";
-        cout<<endl<<setw(40)<<" "<<"***************************************************************************"<<endl<<endl;
+        cout<<endl<<setw(50)<<" "<<"************************************MENU***********************************";
+		cout<<endl<<setw(50)<<" "<<"*                                                                         *";
+		cout<<endl<<setw(50)<<" "<<"*         1. Nhap danh sach                                               *";
+        cout<<endl<<setw(50)<<" "<<"*         2. In ra thong tin                                              *";
+        cout<<endl<<setw(50)<<" "<<"*         3. Tim kiem(ten, CMND, mahoa don, so phong)                     *";
+        cout<<endl<<setw(50)<<" "<<"*         4. Xoa tat ca cac khach hang co ten nhap vao                    *";
+        cout<<endl<<setw(50)<<" "<<"*         5. Sap xep                                                      *";
+        cout<<endl<<setw(50)<<" "<<"*         6. Liet ke theo loai phong                                      *";
+        cout<<endl<<setw(50)<<" "<<"*         7. Liet ke danh sach phong                                      *";
+        cout<<endl<<setw(50)<<" "<<"*                                                                         *";
+        cout<<endl<<setw(50)<<" "<<"***************************************************************************"<<endl<<endl;
         chon=getch();
         switch(chon)
         {   
