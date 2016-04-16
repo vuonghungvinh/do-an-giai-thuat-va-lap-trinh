@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <iostream>
 #include <ctime>
 #include <iomanip>
@@ -577,20 +578,28 @@ main() {
 			switch(chon) {
 				case '1': {
 					Nhap(L,dt);
+					getch();
+					system("cls");
 					break;
 				}
 				case '2': {
 					Xuat(L);
+					getch();
+					system("cls");
 					break;
 				}
 				case '3': {
 					Search(L);
+					getch();
+					system("cls");
 					break;
 				}
 				case '4': {
 					Remove(L);
 					cout<<endl<<"Ket qua sau khi xoa:";
 					Xuat(L);
+					getch();
+					system("cls");
 					break;
 				}
 				case '5': {
@@ -600,6 +609,8 @@ main() {
 					ListQSort(L,n);
 					cout<<endl<<"Ket qua sau khi xoa:";
 					Xuat(L);
+					getch();
+					system("cls");
 					break;
 				}
 				case '6': {
@@ -608,16 +619,24 @@ main() {
 					cin>>n;;
 					Listed(L,n);
 					cout<<endl<<"\nKet qua";
+					getch();
+					system("cls");
 					break;
 				}
 				case '7': {
 					listroom(dt);
+					getch();
+					system("cls");
 					break;
 				}
 				case '0':
+					getch();
+					system("cls");
 					exit(1);
 				default:
 					cout<<endl<<"Nhap lai.";
+					getch();
+					system("cls");
 			}
 		} while (chon!='0');
 
