@@ -316,6 +316,16 @@ void Xuat (LIST &L) {
 	}
 	Footer();
 }
+
+void Searchemptyroom(){
+	int fr,to;
+	printf("Moi ban nhap khoang thoi gian can tim:\n");
+	printf("From:");
+	scanf("%d", &fr);
+	printf("To:");
+	scanf("%d", &to);
+}
+
 void Search(LIST &L) {
 	NODE *p;
 	char tmp[19];
