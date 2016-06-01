@@ -362,6 +362,123 @@ void Search(LIST &L) {
 	Footer();
 	if (p==NULL && i==0)  cout<<endl<<" Khong co khach hang nay trong danh sach";
 }
+
+void tongdoanhthu(LIST &L, string type){
+	NODE *p;
+	p = L.head;
+	float sum = 0;
+	while(p != NULL){
+		sum += p->data.total;
+		p = p->next;
+	}
+	cout<<"Tong doanh thu trong " + type + "la:"<<sum<<"VND";
+}
+
+void enterday(int &fr, int &to, int now){
+	int nowday = NowDay();
+	cout<<"Moi ban nhap khoang thoi gian can tim\n";
+	while(1){
+		cout<<"Ngay den:"; cin>>fr;
+		if(now){
+			if(fr<nowday){
+				cout<<"ngay den phai >= ngay hien tai\n";
+				continue;
+			}
+		}else{
+			if(fr<0){
+			cout<<"ngay den phai >= 1\n";
+			continue;
+		}
+		}
+		cout<<"Ngay di:";cin>>to;
+		if(to<fr){
+			cout<<"ngay di phai >= ngay den\n";
+			continue;
+		}
+		break;
+	}
+}
+
+void searchcustomer(LIST &L){
+	NODE *p;
+	p = L.head;
+	int fr=0, to=0;
+	enterday(fr, to, 0);
+	cout<<"Ket qua tim kiem:\n";
+	Header();
+	while(p != NULL){
+		if(p->data.from_date >= fr && p->data.leave_date >= to){
+			output(p->data);
+			cout<<endl;
+		}
+		p = p->next;
+	}
+	Footer();
+}
+
+void danhsachtraphong(LIST &L){
+	NODE *p;
+	p = L.head;
+	int nowday = NowDay();
+	cout<<"Ket qua tim kiem:\n";
+	Header();
+	while(p != NULL){
+		if(p->data.leave_date == nowday){
+			output(p->data);
+			cout<<endl;
+		}
+		p = p->next;
+	}
+	Footer();
+}
+
+void searchspecialcustomer(LIST &L){
+	char name[19];
+	int fr=0, to=0;
+	enterday(fr, to, 0);
+	cout<<"moi ban nhap ten:";
+	fflush(stdin);
+	gets(name);
+	NODE *p;
+	p = L.head;
+	Header();
+	while(p != NULL){
+		if(p->data.from_date >= fr && p->data.leave_date >= to && strcmp(p->data.name ,name)==0){
+			output(p->data);
+			cout<<endl;
+		}
+		p = p->next;
+	}
+	Footer();
+}
+
+void searchdate(Data* &dt){
+	int fr=0,to=0;
+	enterday(fr, to, 1);
+	Data *tmp;
+	
+	tmp = dt;
+	cout<<"Ket qua tim kiem:\n";
+	laplai:
+	while(tmp != NULL){
+		if(tmp->rm.from.size() == 1 && tmp->rm.from[0] == 0){
+			cout<<tmp->rm.type+tmp->rm.num+"\n";
+			tmp = tmp->next;
+			continue;
+		}
+		for(int i=0;i<tmp->rm.from.size();i++){
+			if((tmp->rm.from[i]<=fr && tmp->rm.to[i]>=fr)|| (tmp->rm.to[i]>=to && tmp->rm.from[i]<=to)){
+				tmp = tmp->next;
+				goto laplai;
+			}
+		}
+		cout<<tmp->rm.type+tmp->rm.num+"\n";
+		tmp = tmp->next;
+	}
+	
+	
+}
+
 void DelFirst(LIST &L) {
 	NODE *tam;
 	tam=L.head;
@@ -568,7 +685,7 @@ main() {
 	while(1) {
 		LIST L;
 		L.head=L.tail=NULL;
-		char chon;
+		int chon;
 		ReadFile(dt);
 		saveData(dt);
 		readcustome(L);
@@ -582,29 +699,35 @@ main() {
 			cout<<endl<<setw(50)<<" "<<"*         5. Sap xep                                                      *";
 			cout<<endl<<setw(50)<<" "<<"*         6. Liet ke theo loai phong                                      *";
 			cout<<endl<<setw(50)<<" "<<"*         7. Liet ke danh sach phong                                      *";
+			cout<<endl<<setw(50)<<" "<<"*         8. Tim phong trong khoang thoi gian                             *";
+			cout<<endl<<setw(50)<<" "<<"*         9. Danh sach khach hang trong khoang thoi gian                  *";
+			cout<<endl<<setw(50)<<" "<<"*         10. Tim khach hang trong khoang thoi gian                       *";
+			cout<<endl<<setw(50)<<" "<<"*         11. Danh sach phong tra trong ngay hom nay                      *";
+			cout<<endl<<setw(50)<<" "<<"*         12. Thong ke doanh thu trong 1 thang                            *";
+			cout<<endl<<setw(50)<<" "<<"*         13. Thong ke doanh thu trong 1 nam                              *";
 			cout<<endl<<setw(50)<<" "<<"*                                                                         *";
 			cout<<endl<<setw(50)<<" "<<"***************************************************************************"<<endl<<endl;
-			chon=getch();
+			cin>>chon;
 			switch(chon) {
-				case '1': {
+				case 1: {
 					Nhap(L,dt);
 					getch();
 					system("cls");
 					break;
 				}
-				case '2': {
+				case 2: {
 					Xuat(L);
 					getch();
 					system("cls");
 					break;
 				}
-				case '3': {
+				case 3: {
 					Search(L);
 					getch();
 					system("cls");
 					break;
 				}
-				case '4': {
+				case 4: {
 					Remove(L);
 					cout<<endl<<"Ket qua sau khi xoa:";
 					Xuat(L);
@@ -612,7 +735,7 @@ main() {
 					system("cls");
 					break;
 				}
-				case '5': {
+				case 5: {
 					int n;
 					cout<<endl<<"Moi ban nhap: "<<endl<<"* 1.De sap xep theo giam dan tong tien "<<endl<<"* 2.De giam dan so ngay o "<<endl<<"* 3.Giam dan theo gia phong"<<endl;
 					cin>>n;
@@ -623,7 +746,7 @@ main() {
 					system("cls");
 					break;
 				}
-				case '6': {
+				case 6: {
 					int n;
 					cout<<endl<<"Moi ban nhap "<<endl<<"* 1.Liet ke tat ca phong loai A "<<endl<<"* 2.Tat ca phong loai B "<<endl<<"* 3.Tat ca con lai\n";
 					cin>>n;;
@@ -633,13 +756,49 @@ main() {
 					system("cls");
 					break;
 				}
-				case '7': {
+				case 7: {
 					listroom(dt);
 					getch();
 					system("cls");
 					break;
 				}
-				case '0':
+				case 8:{
+					searchdate(dt);
+					getch();
+					system("cls");
+					break;
+				}
+				case 9:{
+					searchcustomer(L);
+					getch();
+					system("cls");
+					break;
+				}
+				case 10:{
+					searchspecialcustomer(L);
+					getch();
+					system("cls");
+					break;
+				}
+				case 11:{
+					danhsachtraphong(L);
+					getch();
+					system("cls");
+					break;
+				}
+				case 12:{
+					tongdoanhthu(L, "thang");
+					getch();
+					system("cls");
+					break;
+				}
+				case 13:{
+					tongdoanhthu(L, "nam");
+					getch();
+					system("cls");
+					break;
+				}
+				case 0:
 					getch();
 					system("cls");
 					exit(1);
